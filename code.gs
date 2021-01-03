@@ -10,6 +10,7 @@ const onOpen = e => {
 }
 
 const main = () => {
+    deleteTrigger()
     const start_time = new Date();
     const data = SpreadSheetsSQL.open(id, 'comolib').select(['No.', 'url', 'flg']).filter('url > NULL AND flg = NULL').result()
     let content = $ = url = ''
@@ -78,6 +79,7 @@ const isStop = (start_time) => {
 }
 
 const trans = () => {
+    deleteTrigger()
     const start_time = new Date();
     const sql = SpreadSheetsSQL.open(id, 'comolib_data')
     const data = sql.select(['No.', 'description', 'trans']).filter('trans = NULL').result()
@@ -91,5 +93,12 @@ const trans = () => {
         text = LanguageApp.translate(text, 'en', 'ko')
         text = LanguageApp.translate(text, 'ko', 'ja')
         sql.updateRows({trans: text}, `No. = ${data[i]['No.']}`)
+    }
+}
+
+const deleteTrigger = () => {
+    const triggers = ScriptApp.getProjectTriggers()
+    for (let i in triggers) {
+      ScriptApp.deleteTrigger(triggers[i]);
     }
 }
